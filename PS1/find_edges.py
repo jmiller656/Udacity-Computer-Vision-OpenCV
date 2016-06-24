@@ -18,10 +18,14 @@ cv2.waitKey(0);
 cv2.destroyAllWindows();
 #Get Hough accumulator array of edge image
 H = hough.hough_lines(edges);
+#InputImage to draw lines on
 lines = inputImage;
+#Call function to find rho,theta values of peaks
 peaks = hough.find_peaks(H,6);
-peaks2 = cv2.HoughLines(edges,1,np.pi/180,200);
+#Draw each line
 for rho,theta in peaks:
+	#This was a problematic section for me. Deg -> radians is necessarry with my implementation
+    theta = np.deg2rad(theta)
     a = np.cos(theta)
     b = np.sin(theta)
     x0 = a*rho
@@ -30,16 +34,8 @@ for rho,theta in peaks:
     y1 = int(y0 + 1000*(a))
     x2 = int(x0 - 1000*(-b))
     y2 = int(y0 - 1000*(a))
-    cv2.line(lines,(x1,y1),(x2,y2),(255,0,0),2)
-    # a = np.cos(theta+1.57079)
-    # b = np.sin(theta+1.57079)
-    # x0 = a*rho
-    # y0 = b*rho
-    # x1 = int(x0 + 1000*(-b))
-    # y1 = int(y0 + 1000*(a))
-    # x2 = int(x0 - 1000*(-b))
-    # y2 = int(y0 - 1000*(a))
-    # cv2.line(lines,(x1,y1),(x2,y2),(255,0,0),2)
+    cv2.line(lines,(x1,y1),(x2,y2),(0,255,0),2)
+#Show final image with lines drawn
 cv2.imshow('image',lines);
 cv2.waitKey(0);
 cv2.destroyAllWindows();
